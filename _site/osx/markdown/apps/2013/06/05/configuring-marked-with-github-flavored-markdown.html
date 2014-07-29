@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Configuring Marked With GitHub Flavored Markdown(ish)</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Carwin Young</a></h1>
+            <a class="extra" href="/">home</a>
+          </div>
+
+          <h2>Configuring Marked With GitHub Flavored Markdown(ish)</h2>
+<p class="meta">05 Jun 2013</p>
+
+<div class="post">
+<p>I prefer to write things almost exclusively using the Markdown format. It&#39;s
+pretty great and if you&#39;re reading this, chances are you think so too.</p>
+
+<p>There are a plethora of tools out there to help you visualize what the output of
+your fancy Markdown document will turn into once a parser runs over it and spits
+out HTML, but the two I&#39;ve used the most are <a href="http://markedapp.com">Marked</a> and
+<a href="http://mouapp.com/">Mou</a>; both for OS X.</p>
+
+<p>Mou is a stand-up candidate for a primary Markdown visualizer, but I ran into
+more than a few odd little bugs here and there when I was using it. Namely,
+poor support or glitchy behavior for extended Markdown formatting (tables and
+junk). When the extended features were supported, I found that I didn&#39;t quite like the
+way Mou was implementing them, so I switched to a recommendation of my
+co-worker, <a href="http://lbt.me/eaton">Jeff Eaton</a>, called Marked. Don&#39;t let that
+dissuade you from using Mou though, it&#39;s fantastic in a lot of other ways.</p>
+
+<p>Marked too had some funky issues, but happily, provides a way to configure the
+parser it runs on. In fact, you can configure your own entirely, which is what
+this article is really about. One thing I think most people who switch from Mou
+to Marked miss is the ability to edit and preview in the same application. For
+me, the enhanced configuration abilities outweigh the annoyance of
+getting used to writing exclusively in Vim again.</p>
+
+<p>You may have noticed in the title the acronym <strong>GHFM</strong>. I use that to stand for
+<a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>
+which is a fancy Markdown variant which GitHub uses. Since a lot of what I write
+ends up on GitHub, it makes sense to try and emulate GHFM locally.</p>
+
+<p>In addition to GHFM, I&#39;m also becoming increasingly attached to some of the
+Markdown features from the <a href="http://michelf.ca/projects/php-markdown/extra/">PHP Markdown Extra</a> project.
+Support for things like tables and footnotes are fantastic additions to the
+Markdown toolset.</p>
+
+<p>So, with all this hodgepodge of extra Markdown stuff, what exactly can we
+replicate locally? Here&#39;s a summary:</p>
+
+<table><thead>
+<tr>
+<th>Feature</th>
+<th>Working with Marked?</th>
+<th>Source</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Abbreviations</td>
+<td>no</td>
+<td>Markdown Extra</td>
+</tr>
+<tr>
+<td>Definition lists</td>
+<td>no</td>
+<td>Markdown Extra</td>
+</tr>
+<tr>
+<td>Fenced code blocks</td>
+<td>yes</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Footnotes</td>
+<td>no</td>
+<td>Markdown Extra</td>
+</tr>
+<tr>
+<td>Inline HTML</td>
+<td>yes</td>
+<td>Markdown Extra</td>
+</tr>
+<tr>
+<td>Markdown inside HTML blocks</td>
+<td>no</td>
+<td>Markdown Extra</td>
+</tr>
+<tr>
+<td>Multiple underscores in words</td>
+<td>yes</td>
+<td>GHFM</td>
+</tr>
+<tr>
+<td>Newlines (via 2x space at end of line)</td>
+<td>yes</td>
+<td>GHFM</td>
+</tr>
+<tr>
+<td>URL autolinking</td>
+<td>yes</td>
+<td>GHFM</td>
+</tr>
+<tr>
+<td>Special attributes (ids, classes)</td>
+<td>no</td>
+<td>Markdown Extra</td>
+</tr>
+<tr>
+<td>Syntax highlighting</td>
+<td>yes</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Tables</td>
+<td>yes</td>
+<td>Markdown Extra</td>
+</tr>
+<tr>
+<td>Task Lists</td>
+<td>no</td>
+<td>GHFM</td>
+</tr>
+</tbody></table>
+
+<p>Obviously the list isn&#39;t complete, but we have the majority of the GHFM
+extensions and 1/2 of the most important contributions from Markdown Extra
+(Tables and Footnotes).</p>
+
+<p>Even missing a few, that&#39;s a ton of extensions. With GHFM and Markdown Extra
+syntaxes in the mix, there are 5+ ways to write a header!</p>
+
+<p>Da-yum!</p>
+
+<p>To help keep things
+consistent, I wrote myself a <a href="https://github.com/carwin/markdown-styleguide">Markdown Style
+Guide</a> which you should
+definitely fork for your own uses or flatter me and just use as-is.</p>
+
+<p>So, now that we know what our capabilities are, let&#39;s get down to business:</p>
+
+<h2 id="toc_0">1. Install the <code>pygments</code> library for syntax highlighting.</h2>
+
+<p><a href="http://pygments.org">Pygments</a> is a generic syntax highlighter written in
+Python and supports a wide variety of languages, including
+<a href="http://www.muppetlabs.com/%7Ebreadbox/bf/">Brainfuck</a> which is pretty hardcore.
+We&#39;ll have our redcarpet settings use this for syntax highlighting later on.</p>
+
+<p><code>sudo easy_install pygments</code></p>
+
+<h3 id="toc_1">Check if <code>pygmentize</code> bin is in your user $PATH:</h3>
+
+<p>Type <code>pygmentize</code>. If you get an error, update your $PATH in one of two ways:</p>
+
+<h3 id="toc_2"><em>Update your shell $PATH</em></h3>
+
+<p>I use ZSH, so these instructions use <code>~/.zshrc</code> as a generic example. You
+should use whatever is appropriate for your setup: <code>~/.bashrc</code>,
+<code>~/.zshenv</code>, etc...</p>
+
+<p>To explicitly add <code>pygmentize</code> to your $PATH via <code>.zshrc</code>, first locate
+<code>pygmentize</code> via  <code>which pygmentize</code> or <code>locate pygmentize</code>.</p>
+
+<p>If the <code>pygments</code> library is actually installed, one of the above commands
+should have returned a POSIX path to the bin, which probably looks
+something like this:</p>
+
+<div class="highlight"><pre><code class="bash">/usr/bin/pygmentize
+/usr/local/bin/pygmentize
+/wherever/you/installed/pygmentize
+</code></pre></div>
+
+<p>Once you have the path, crack open your <code>~/.zshrc</code> and append:</p>
+
+<div class="highlight"><pre><code class="bash"><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;$PATH:/wherever/you/installed/pygmentize&quot;</span>
+</code></pre></div>
+
+<h3 id="toc_3">Symlink <code>pygmentize</code> to somewhere that <em>IS</em> in your $PATH:</h3>
+
+<p>There&#39;s a good chance that the directory <code>/usr/bin/</code> is in your user&#39;s
+$PATH. So following the steps from above to locate where <code>pygmentize</code>
+actually got installed, create a symlink from there to <code>/usr/bin</code>
+or <code>/usr/local/bin</code>:</p>
+
+<div class="highlight"><pre><code class="bash">ln -s /wherever/you/installed/pygmentize /usr/bin
+</code></pre></div>
+
+<p>or</p>
+
+<div class="highlight"><pre><code class="bash">ln -s /wherever/you/installed/pygmentize /usr/local/bin
+</code></pre></div>
+
+<h2 id="toc_4">2. Install Some Shiny Gems</h2>
+
+<p>OS X comes pre-packaged with Ruby and <code>rubygems</code> so you shouldn&#39;t run into any
+trouble here. There&#39;s a chance you may have to prepend <code>sudo</code> to these commands
+depending on how you have your environment configured, but that&#39;s not the end of
+the world by any stretch.</p>
+
+<p>We need 2 gems for GitHub flavored goodness:</p>
+
+<ul>
+<li>The <a href="https://github.com/vmg/redcarpet">Redcarpet 2</a> Ruby gem - A Ruby
+library for Markdown processing.</li>
+</ul>
+
+<div class="highlight"><pre><code class="bash">gem install redcarpet
+</code></pre></div>
+
+<ul>
+<li>The <a href="https://github.com/github/albino">Albino</a> Ruby gem - <em>A Ruby
+parser for <code>pygments</code>.</em></li>
+</ul>
+
+<div class="highlight"><pre><code class="bash">gem install albino
+</code></pre></div>
+
+<h2 id="toc_5">3. Grab A Processing Script</h2>
+
+<p>Now that you&#39;ve got all the fancy parts, you&#39;ll need to give Marked a way to
+actually put them to good use.</p>
+
+<p>To do that, you&#39;ll need a processing script to parse your Markdown since Marked
+won&#39;t be handling it for you any longer.</p>
+
+<p>Feel free to stretch your Google-fu muscles or enjoy a round of DucKDuckGo, but
+to save you some time, nab the Ruby script I use and put it somewhere safe (I
+keep mine in my <a href="https://github.com/carwin/dotfiles">dotfiles</a>).</p>
+
+<p>You can either copy paste it from the embedded gist below, or use <code>wget</code>/<code>curl</code>
+if you&#39;re feeling fancy.</p>
+
+<h3 id="toc_6">Grab the Ruby parser</h3>
+
+<p><details>
+  <summary>Copy/Paste the embedded <a href="https://gist.github.com/carwin/5253509#file-ghfm-rb">gist</a></summary>
+  <script src="https://gist.github.com/carwin/5253509.js"></script>
+</details></p>
+
+<p>or</p>
+
+<div class="highlight"><pre><code class="bash">wget https://gist.github.com/carwin/5253509/raw/b5379abca8ae20ab6ea5e9415531f2e763fcb0e1/ghfm.rb
+</code></pre></div>
+
+<p>Take a good look at the gist and read the comments to understand what is being
+configured with each directive.</p>
+
+<h3 id="toc_7">Make the script executable:</h3>
+
+<div class="highlight"><pre><code class="bash">chmod +x /path/to/the/script/ghfm.rb
+</code></pre></div>
+
+<p><strong>Disclaimer</strong>: <em>I&#39;m not the original author of this script, and I can&#39;t
+remember it&#39;s original source, so if you&#39;re the author and you&#39;re pissed off
+that I&#39;m not giving you the Nerd Cred you deserve, feel free to write an angry
+email about it.</em></p>
+
+<h2 id="toc_8">4. Actually start configuring Marked</h2>
+
+<p>Now that all that preparation is out of the way, we can finally configure the
+application. If you&#39;re thinking, &quot;Good gravy Carwin, we&#39;re <em>still</em> not
+finished?!?&quot; you&#39;re probably not alone. Hang in there, it&#39;s almost over.</p>
+
+<p>Crack open Marked.app&#39;s settings and soak in the massive amount of config
+options presented to you.</p>
+
+<p>That&#39;s right.</p>
+
+<p><em>4. Panes.</em></p>
+
+<p>After the initial shock of how complicated this application&#39;s config options are
+wears off you can just clone my settings to get you up and running. I figure
+you&#39;ll be tweaking these to your liking anyway so I&#39;ll avoid explaining each and
+every parameter in the GUI and just show you what I&#39;m using.</p>
+
+<h3 id="toc_9">Window</h3>
+
+<ul>
+<li>&#9744; Translucent in background</li>
+<li>&#9744; Keep new windows on top</li>
+<li>&#9744; Show word count for selection</li>
+<li>&#9744; Show welcome panel on launch</li>
+<li>Status bar: &#9745; Style picker &#9745; Word count</li>
+<li>Edit With: whatever.app</li>
+</ul>
+
+<p><img src="http://carwin.github.io/images/marked--window--config.jpg" alt="Marked.app Window Config"></p>
+
+<h3 id="toc_10">Behavior</h3>
+
+<h4 id="toc_11">MultiMarkdown</h4>
+
+<ul>
+<li><del>&#9744; Disable &quot;smart&quot; typography</del></li>
+<li><del>&#9744; Markdown Compatibility mode</del></li>
+<li><del>&#9744; Disable header ID creation</del></li>
+<li><del>&#9744; Retain line breaks in paragraphs</del></li>
+<li><del>&#9744; Convert fenced code blocks</del></li>
+<li><del>&#9744; Process HTML files as Markdown</del></li>
+<li>&#9744; Scroll to first edit</li>
+<li>&#9744; Disable link popovers</li>
+<li>Strip: &#9744; YAML Front Matter &#9745; MMD3 Metadata</li>
+</ul>
+
+<h4 id="toc_12">Custom Processor <em>(hooray, time for that script!)</em></h4>
+
+<ul>
+<li>&#9745; Custom Markdown Processor</li>
+<li>Path: <code>/Wherever/You/Saved/That/Ruby/Script/From/Step/3</code></li>
+<li>Args: <code>&lt;empty&gt;</code></li>
+</ul>
+
+<p><img src="http://carwin.github.io/images/marked--behavior--config.jpg" alt="Marked.app Behavior Config"></p>
+
+<h3 id="toc_13">Style</h3>
+
+<p>Rather than list these settings out, I&#39;ll just say there&#39;s nothing to change in
+the <strong>Additional Features</strong> since our script from Step 3 will take care of our
+cool settings and options. You can configure your own custom CSS for previewing
+your Markdown output here, but I just use the GitHub default style.</p>
+
+<p><img src="http://carwin.github.io/images/marked--style--config.jpg" alt="Marked.app Style Config"></p>
+
+<h3 id="toc_14">Printing</h3>
+
+<p>I have yet to find myself wanting to print out a document I wrote in Markdown,
+although surely that day will come now that I&#39;ve mentioned it.</p>
+
+<p>That said, I imagine these settings are sensible so I&#39;ll include them here for
+the sake of completeness:</p>
+
+<ul>
+<li>&#9744; Print table of contents</li>
+<li>&#9745; Hide link highlights when printing</li>
+<li>&#9744; Replace horizontal rules (<code>&lt;hr&gt;</code>) with page breaks</li>
+<li>&#9745; Page break before footnotes</li>
+<li>Add page breaks before: &#9744; H1 &#9744; H2</li>
+</ul>
+
+<p><img src="http://carwin.github.io/images/marked--printing--config.jpg" alt="Marked.app Style Config"></p>
+
+<h2 id="toc_15">5. Decide you don&#39;t like it after all and go watch T.V. or something</h2>
+
+<p>After you&#39;ve finished 1-4 you should have a pretty primo Marked.app setup. I&#39;ll
+wager that many of you will make it all the way to the end and decide it&#39;s not
+<em>quite</em> what you need and go looking for something else. I understand. Nerds are
+picky.</p>
+
+<p>You should take a break before you go a-hunting again though.</p>
+
+<p>Seriously, rest up - this was a huge pain in the ass.</p>
+
+</div>
+
+
+          <div class="footer">
+            <div class="contact">
+              <p>
+                Your Name<br />
+                What You Are<br />
+                you@example.com
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/yourusername">github.com/yourusername</a><br />
+                <a href="https://twitter.com/yourusername">twitter.com/yourusername</a><br />
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>

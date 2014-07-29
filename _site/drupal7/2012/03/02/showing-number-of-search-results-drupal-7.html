@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Showing the number of results that a search returns in Drupal 7</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Carwin Young</a></h1>
+            <a class="extra" href="/">home</a>
+          </div>
+
+          <h2>Showing the number of results that a search returns in Drupal 7</h2>
+<p class="meta">02 Mar 2012</p>
+
+<div class="post">
+<p>The boss handed me a search result page design that included a
+&quot;Showing x results&quot; element. I bet you can guess that Drupal doesn&#39;t do that
+with any available hook function or available variables/constants.</p>
+
+<p>Searches in D7 can be themed from two files, <code>search-results.tpl.php</code> and
+<code>search-result.tpl.php</code>. The first themes the results of the second which themes
+individual search results. Handy!</p>
+
+<p>Sadly, like I mentioned earlier, there&#39;s no default function for what I want to
+do so I had to use a <code>template_preprocess_search_results()</code> function in my
+template.php file. Make sure if you’re going to copy my code that you replace
+the word &quot;template&quot; in that function with the machine name of your theme.</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="lineno"> 1</span> <span class="n">function</span> <span class="n">yourtheme_preprocess_search_results</span><span class="p">(</span><span class="o">&amp;</span><span class="vg">$variables</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 2</span>   <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;search_results&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="lineno"> 3</span>   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;module&#39;</span><span class="o">]</span><span class="p">))</span> <span class="p">{</span>
+<span class="lineno"> 4</span>     <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;module&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">check_plain</span><span class="p">(</span><span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;module&#39;</span><span class="o">]</span><span class="p">);</span>
+<span class="lineno"> 5</span>   <span class="p">}</span>
+<span class="lineno"> 6</span>   <span class="vg">$search_count</span> <span class="o">=</span> <span class="n">array</span><span class="p">();</span>
+<span class="lineno"> 7</span>   <span class="n">foreach</span> <span class="p">(</span><span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;results&#39;</span><span class="o">]</span> <span class="n">as</span> <span class="vg">$result</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno"> 8</span>     <span class="vg">$search_count</span><span class="o">[]</span> <span class="o">=</span> <span class="vg">$result</span><span class="p">;</span>
+<span class="lineno"> 9</span>     <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;search_results&#39;</span><span class="o">]</span> <span class="o">.</span><span class="n">=</span> <span class="n">theme</span><span class="p">(</span><span class="s1">&#39;search_result&#39;</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;result&#39;</span> <span class="o">=&gt;</span> <span class="vg">$result</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span> <span class="o">=&gt;</span> <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;module&#39;</span><span class="o">]</span><span class="p">));</span>
+<span class="lineno">10</span>   <span class="p">}</span>
+<span class="lineno">11</span>   <span class="vg">$search_count</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="vg">$search_count</span><span class="p">);</span>
+<span class="lineno">12</span>   <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;count&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="vg">$search_count</span><span class="p">;</span>
+<span class="lineno">13</span>   <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;pager&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">theme</span><span class="p">(</span><span class="s1">&#39;pager&#39;</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span> <span class="o">=&gt;</span> <span class="no">NULL</span><span class="p">));</span>
+<span class="lineno">14</span>   <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;theme_hook_suggestions&#39;</span><span class="o">][]</span> <span class="o">=</span> <span class="s1">&#39;search_results__&#39;</span> <span class="o">.</span> <span class="vg">$variables</span><span class="o">[</span><span class="s1">&#39;module&#39;</span><span class="o">]</span><span class="p">;</span>
+<span class="lineno">15</span> <span class="p">}</span>
+</code></pre></div>
+
+<p>This is pretty much the same as the standard version of the function except that
+I created an empty array, and then populated it with results in that <code>foreach()</code>
+function. Then I used PHP’s <code>count()</code> to see how many keys were in the array.
+That’s the number of results.</p>
+
+<p>The last part, <code>$variables[&#39;count&#39;]</code> is the special piece which makes it
+available in the <code>search-results.tpl.php</code> file. So in that file, you can just
+print <code>$count</code> anywhere and blamo, I have a display of the number of
+results of a search.</p>
+
+</div>
+
+
+          <div class="footer">
+            <div class="contact">
+              <p>
+                Your Name<br />
+                What You Are<br />
+                you@example.com
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/yourusername">github.com/yourusername</a><br />
+                <a href="https://twitter.com/yourusername">twitter.com/yourusername</a><br />
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>

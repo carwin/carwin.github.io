@@ -1,0 +1,23 @@
+url: http://carwin.github.io
+name: Carwin Young
+author: Carwin Young
+markdown: redcarpet
+pygments: true
+description:
+
+date_format: 'ordinal'
+
+subscribe_rss: /atom.xml
+
+category_dir: categories
+redcarpet:
+  extensions:
+    - tables
+    - superscript
+    - with_toc_data
+    - lax_spacing
+    - fenced_code_blocks
+    - strikethrough
+    - space_after_headers
+    - no_intra_emphasis
+    - no_styles

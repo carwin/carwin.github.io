@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Putting a Paypal link into a form loaded with colorbox using Drupal 7's FAPI</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Carwin Young</a></h1>
+            <a class="extra" href="/">home</a>
+          </div>
+
+          <h2>Putting a Paypal link into a form loaded with colorbox using Drupal 7's FAPI</h2>
+<p class="meta">11 Jan 2012</p>
+
+<div class="post">
+<p><img src="http://media.tumblr.com/tumblr_lxpc7tX4eO1qb67o2.jpg" alt="Image"></p>
+
+<p>I hope my face relays the angst involved with this concept.</p>
+
+<p>Here&#39;s what I wanted out of Drupal today:</p>
+
+<ol>
+<li>Have a main menu item load in a modal pop-up (Colorbox) instead of directing
+you to a page.</li>
+<li>Specifically, load the contact form link as a pop-up (and maybe newsletter
+subscriptions as well).</li>
+</ol>
+
+<p>Apparently this is a huge pain in the assbutt.</p>
+
+<p>Here&#39;s how to do it:</p>
+
+<ul>
+<li>Crack open your theme.template file and add something like this in your
+<code>theme_preprocess_page()</code> with <code>drupal_add_js</code> in your doc ready function:</li>
+</ul>
+
+<div class="highlight"><pre><code class="js"><span class="lineno">1</span> <span class="nx">jQuery</span><span class="p">(</span><span class="s2">&quot;#menu-532-1 a&quot;</span><span class="p">)</span>
+<span class="lineno">2</span>   <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span><span class="s2">&quot;http://yoursite.com/colorbox/form/form_id?width=500&amp;amp;height=500&amp;amp;iframe=false#form_id&quot;</span><span class="p">)</span>
+<span class="lineno">3</span>   <span class="p">.</span><span class="nx">colorbox</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Thank your lucky stars you didn&#39;t dick around with this for hours.</p>
+
+<p>Something to note is that this will not work for forms other than Contact,
+User Register/Login and a few others. Webforms and the like require a highly
+more annoying solution involving adding the form block to an invisible region in
+the template and then pulling the form into colorbox manually with jquery. It
+doesn&#39;t look pretty and also isn&#39;t the focus of this – so back to the
+matter at hand.</p>
+
+<p>Now is the trickiness - I needed to add some stuff to that pop-up, but the way I
+did it I was only loading the form itself, which means I needed to modify the
+form with Drupal&#39;s awesome Forms API (FAPI).</p>
+
+<p>I created a module called <code>helper</code> to store my hooks and added this:</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="lineno">1</span> <span class="n">function</span> <span class="n">helper_form_contact_site_form_alter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="vg">$form</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="vg">$form_state</span><span class="p">,</span> <span class="vg">$form_id</span><span class="p">){</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+<span class="lineno">2</span>   <span class="vg">$form</span><span class="o">[</span><span class="s1">&#39;some_text&#39;</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+<span class="lineno">3</span>     <span class="s1">&#39;#type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span>
+<span class="lineno">4</span>     <span class="s1">&#39;#markup&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;&lt;p&gt;markup&lt;/p&gt;&#39;</span><span class="p">,</span>
+<span class="lineno">5</span>   <span class="p">);</span>
+<span class="lineno">6</span> <span class="p">}</span>
+</code></pre></div>
+
+<p>Ok, yeah, that was easy. But now I need a Paypal donation link. Typically these
+come as forms that you copy/pasta into your site. <del>But you can&#39;t hook a form
+into another form, that&#39;s stupid.</del></p>
+
+<p>Here&#39;s a link structure you can use in a form field&#39;s #markup:</p>
+
+<div class="highlight"><pre><code class="html"><span class="lineno">1</span> <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;amp;business=you@whatever.com&amp;amp;item_name=Item%20Name%20With%20Spaces&quot;</span><span class="nt">&gt;</span>
+<span class="lineno">2</span>   <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;https://www.paypal.com/en_US/i/btn/x-click-but21.gif&quot;</span> <span class="nt">/&gt;</span>
+<span class="lineno">3</span> <span class="nt">&lt;/a&gt;</span>
+</code></pre></div>
+
+</div>
+
+
+          <div class="footer">
+            <div class="contact">
+              <p>
+                Your Name<br />
+                What You Are<br />
+                you@example.com
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/yourusername">github.com/yourusername</a><br />
+                <a href="https://twitter.com/yourusername">twitter.com/yourusername</a><br />
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>

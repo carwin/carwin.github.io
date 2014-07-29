@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Setting Your Input Format To Dvorak</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Carwin Young</a></h1>
+            <a class="extra" href="/">home</a>
+          </div>
+
+          <h2>Setting Your Input Format To Dvorak</h2>
+<p class="meta">01 May 2013</p>
+
+<div class="post">
+<p>In the first part of this series I promised this follow-up would have some
+resources for folks who already use or who might like to start using the
+fabulous Dvorak keyboard layout.</p>
+
+<p>After amassing a trove of Dvorak resources it became obvious that fitting them
+all into one post would be... hard to read. Instead, I&#39;ll be splitting up the
+resources into separate posts based on a topic. This one, as the title suggests
+is all about input formats.</p>
+
+<p>If you have any contributions you&#39;d like to make or questions you&#39;d like to ask,
+don&#39;t hesitate to ping me on Twitter or Freenode IRC (I&#39;m carwin in both places).</p>
+
+<h2 id="toc_0">OS X</h2>
+
+<p>These instructions are grouped by most similar, there may be some minor differences.</p>
+
+<h3 id="toc_1">Snow Leopard / Lion / Mountain Lion</h3>
+
+<ol>
+<li>Open System Preferences and click on Language &amp; Text</li>
+<li>Choose Input Sources next and enable Dvorak.</li>
+<li>You&#39;ll likely want to change the keyboard layout for the login screen as well, to do so:
+
+<ul>
+<li><em>System Preferences</em></li>
+<li><em>Accounts</em></li>
+<li><em>Login Options</em></li>
+<li><em>Show input menu in login window</em></li>
+<li>After setting that option and changing it once from the login screen you
+shouldn&#39;t have to bother with it again.</li>
+</ul></li>
+</ol>
+
+<h3 id="toc_2">Tiger and earlier</h3>
+
+<ol>
+<li>Open System Preferences and click on International</li>
+<li>Choose Input Menu and enable Dvorak.</li>
+</ol>
+
+<p>Apple provides two different Dvorak options, not including the left/right hand
+variants. The first is the regular US Dvorak and the second is Dvorak QWERTY,
+aka: Big Fat Cheater&#39;s Dvorak.</p>
+
+<p>BFC Dvorak&#39;s defining feature is that your keyboard layout will switch back to
+QWERTY while you hold the <code>⌘</code> key, in effect keeping your shortcut habits intact.
+If you&#39;re serious about using Dvorak, this input format will only slow you down.</p>
+
+<p>You can leave other input sources available, but for your own sanity, make
+sure you set the <em>&quot;Use the same one in all documents&quot;</em> option.</p>
+
+<p><em>I&#39;m missing images of older OS X environments, send me an email if you&#39;ve got some!</em></p>
+
+<h2 id="toc_3">Linux Consoles</h2>
+
+<p>The examples below are specifically from Arch Linux, but every flavor will have
+a keymap file stored somewhere. A typical path is something like this
+(although Arch is cool and won&#39;t make you find it):</p>
+
+<p><code>/usr/lib/kbd/keytables/dvorak.map</code></p>
+
+<h3 id="toc_4">On the fly in a TTY</h3>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># Replace &#39;dvorak&#39; with the path to your keymap</span>
+<span class="o">&gt;</span> <span class="n">loadkeys</span> <span class="n">dvorak</span>
+</code></pre></div>
+
+<h3 id="toc_5">Permanent solution for console keymap</h3>
+
+<div class="highlight"><pre><code class="ruby"><span class="c1"># /etc/vconsole.conf in Arch Linux</span>
+<span class="no">KEYMAP</span><span class="o">=</span><span class="s2">&quot;dvorak&quot;</span>
+</code></pre></div>
+
+<p>Now when you boot into a TTY you&#39;ll be all set, which is pretty handy when it
+comes time to enter login credentials.</p>
+
+<h2 id="toc_6">Chrome OS and ChromiumOS</h2>
+
+<ol>
+<li>The first time you login to Chrome OS you&#39;re given the option to set your
+ keyboard layout before doing anything else. Nice!</li>
+<li>If you&#39;ve already set up Chrome OS with QWERTY or AZERTY, simply navigate
+ to the following URL and choose Dvorak as the input method:
+<code>chrome://settings/languages</code></li>
+<li>Yet a third way to edit you keyboard layout is to click through the UI of
+ the operating system:
+
+<ul>
+<li>Click in the bottom right corner and choose <em>Settings</em></li>
+<li>When the resulting window appears, choose <em>Keyboard settings</em>.</li>
+<li>Finally, select <strong>US Dvorak keyboard</strong> and click <em>Done</em>.</li>
+</ul></li>
+</ol>
+
+<p><details>
+  <summary>Visual Walkthrough</summary>
+  First time setup:
+  <img src="/images/cros-dvorak1.png" alt="cros1">
+  Navigating the UI:
+  <img src="/images/cros-dvorak2.png" alt="cros2">
+  <img src="/images/cros-dvorak3.png" alt="cros3">
+  <img src="/images/cros-dvorak4.png" alt="cros4">
+</details></p>
+
+<h2 id="toc_7">Android (4.x)</h2>
+
+<p>This is actually a bit tricky since Android doesn&#39;t come with Dvorak enabled
+although it is available. What you need to do is actually set up a
+custom keyboard input.</p>
+
+<ol>
+<li>Navigate to <em>Settings</em> and choose <strong>Language &amp; Input</strong></li>
+<li>Scroll down to <em>Keyboard &amp; Input Methods</em> and click your current keyboard
+ layout. More than likely this is still <strong>Default</strong>.</li>
+<li>Scroll all the way to the bottom and choose <strong>Advanced settings</strong>.</li>
+<li>On the <em>Advanced settings</em> page, choose <strong>Custom input styles</strong>.</li>
+<li>Click <strong>Add style</strong> at the bottom of the next screen.</li>
+<li>A popup box will appear, keep your Language the way it is unless you&#39;d
+ like to change it to something else, but select <em>Dvorak</em> from
+ the <em>Layout</em> dropdown menu and click <strong>Add</strong>.</li>
+</ol>
+
+<p><details>
+  <summary>Visual Walkthrough</summary>
+  <img src="/images/android-dvorak1.jpg" alt="android1">
+  <img src="/images/android-dvorak2.jpg" alt="android2">
+  <img src="/images/android-dvorak3.jpg" alt="android3">
+  <img src="/images/android-dvorak4.jpg" alt="android4">
+  <img src="/images/android-dvorak5.jpg" alt="android5">
+  <img src="/images/android-dvorak6.jpg" alt="android6">
+</details></p>
+
+<p>That&#39;s it! After you click add the system will ask you if you&#39;d like to enable
+the new input format you created (Protip: you do) and you&#39;re off to the races!</p>
+
+<h2 id="toc_8">Windows XP</h2>
+
+<ol>
+<li>Go to the Control Panel</li>
+<li>Click Regional and Language Options</li>
+<li>Click on the Languages tab</li>
+<li>On the Languages tab, click Details...</li>
+<li>In the resulting window, choose Add....</li>
+<li>Yet another window appears. In this one, check the Keyboard
+ layout/IME: checkbox and select United States-Dvorak from the dropdown menu.</li>
+<li>Hit okay and the window will close, bringing you back to the window we saw
+ in step 5. Make sure United States-Dvorak is selected and click Apply.</li>
+<li>Finally, select United States-Dvorak from the dropdown above.</li>
+</ol>
+
+<p><details>
+  <summary>Visual Walkthrough</summary>
+  <img src="/images/xp-dvorak1.png" alt="xp1">
+  <img src="/images/xp-dvorak2.png" alt="xp2">
+  <img src="/images/xp-dvorak3.png" alt="xp3">
+  <img src="/images/xp-dvorak4.png" alt="xp4">
+  <img src="/images/xp-dvorak5.png" alt="xp5">
+  <img src="/images/xp-dvorak6.png" alt="xp6">
+  <img src="/images/xp-dvorak7.png" alt="xp7">
+  <img src="/images/xp-dvorak8.png" alt="xp8">
+</details></p>
+
+<p>Interestingly, Microsoft provides directions for changing your keyboard layout
+without ever touching your mouse: <a href="http://www.microsoft.com/enable/training/windowsxp/keyboardlayout.aspx">link</a></p>
+
+<h2 id="toc_9">Windows Vista</h2>
+
+<ol>
+<li>Press the <strong>Windows Key</strong> + U</li>
+<li>Navigate to <em>Explore all Settings</em> and choose <strong>Make the keyboard easier to use.</strong></li>
+<li>Scroll down to <em>See Also</em> and choose <strong>Add a Dvorak keyboard and change 
+ other keyboard input settings</strong>.</li>
+<li>Switch to the <strong>Keyboards and Languages</strong> tab and choose <strong>Change keyboards</strong>.</li>
+<li>Switch to the <strong>General</strong> tab and click <strong>Add</strong>.</li>
+<li>Scroll down and expand <strong>English (United States)</strong> and <strong>Keyboard</strong>. 
+ Click to fill one of the <strong>United States-Dvorak</strong> layout options.</li>
+<li>Finish by clicking <strong>OK</strong>.</li>
+</ol>
+
+<p><details>
+  <summary>Visual Walkthrough</summary>
+  <img src="/images/vista-dvorak1.png" alt="vista1">
+  <img src="/images/vista-dvorak2.png" alt="vista2">
+  <img src="/images/vista-dvorak3.jpeg" alt="vista3">
+  <img src="/images/vista-dvorak4.jpeg" alt="vista4">
+  <img src="/images/vista-dvorak5.jpeg" alt="vista5">
+  <img src="/images/vista-dvorak6.jpeg" alt="vista6">
+  <img src="/images/vista-dvorak7.jpeg" alt="vista7">
+  <img src="/images/vista-dvorak8.jpeg" alt="vista8">
+</details></p>
+
+<p><a href="http://grok.lsu.edu/article.aspx?articleid=7852">~source</a></p>
+
+<h2 id="toc_10">Windows 7</h2>
+
+<ol>
+<li>From the <strong>Start</strong> menu click <strong>Control Panel</strong>.</li>
+<li>In the Control Panel folder click the <strong>Clock, Language, and Region</strong> link</li>
+<li>Click the <strong>Region and Language</strong> control panel</li>
+<li>Click the <strong>Keyboards and Languages</strong> tab.</li>
+<li>Click the <strong>Change Keyboard...</strong> button</li>
+<li>On the <strong>General</strong> tab, press the <strong>Add</strong> button.</li>
+<li>Scroll down to <strong>English (United States)</strong>, expand it then check the box 
+ for <strong>United States - Dvorak</strong>.</li>
+<li>Press <strong>OK</strong> buttons close the dialog boxes to finish.</li>
+</ol>
+
+<p><details>
+  <summary>Visual Walkthrough</summary>
+  <img src="/images/win7-dvorak1.png" alt="win71">
+</details></p>
+
+<p><a href="http://windowstipoftheday.blogspot.com/2011/06/windows-7-using-dvorak-keyboard-layout.html">~source</a></p>
+
+</div>
+
+
+          <div class="footer">
+            <div class="contact">
+              <p>
+                Your Name<br />
+                What You Are<br />
+                you@example.com
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/yourusername">github.com/yourusername</a><br />
+                <a href="https://twitter.com/yourusername">twitter.com/yourusername</a><br />
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>
